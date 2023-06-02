@@ -1,2 +1,2 @@
 # sasisuseso-tai
-Interactivei Sensing 2023
+Interactive Sensing 2023
