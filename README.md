@@ -2,22 +2,30 @@
 Interactive Sensing 2023
 
 Made by Katsumi Kobayashi, Menma.
-## 作業について
-### 作業の開始
-新しく作業を始めるときは issue を建てたあとに issue にブランチをひもづける。このときブランチの命名に  
-- 機能の追加など、バグフィックス以外 feature/
-- バグフィックス fix/
 
-のいずれかをブランチの頭につける。Issueの説明に作業の概要を記述し、Issue に適切なラベルをつける。
+# How to use
+## 1. Install
+First, install gocv following the instruction on https://github.com/hybridgroup/gocv.
 
-### コミットメッセージについて
-コミットメッセージは日本語で、以下のうちどれかの接頭辞をつける。
+```bash
+$ git clone https://github.com/hybridgorup/gocv.git
+$ cd gocv
+$ make install
+```
+If go run ./cmd/version/main.go does not work, try installing opencv via yay.
 
-- fix: バグ修正
-- add: 新規ファイル追加
-- update: 機能の追加、バグではない機能修正
-- clean: リファクタリングなど機能とは関連のない修正
-- revert: 取り消し
+```bash
+$ yay -S opencv
+```
 
-例: add: main.go 作成  
-こまめにpushしてくれると作業状況が把握できて嬉しい。
+ You may also need to export PKG_CONFIG_PATH.
+
+```bash
+$ export PKG_CONFIG_PATH="/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
+```
+
+If it still doesn't work,try settind ldconfig.
+Add ```/usr/local/lib/opencv/``` to ```/etc/ld.so.conf.d/opencv.conf```, and run ```sudo ldconfig```.
+
+If everything goes well, run ```go run .``` in the ```sasisuseso-tai/server``` directory.
+This may take a while since it will also build the dependencies (I guess). Don't forget to plug in a camera.
