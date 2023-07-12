@@ -1,0 +1,25 @@
+syntax="proto3";
+option go_package="./";
+package robot;
+
+service Robot{
+    rpc Turn(TurnRequest) returns (TurnResponse){}
+    rpc Move(MoveRequest) returns (MoveResponse){}
+}
+
+message TurnRequest{
+    int32 angle=1;
+}
+
+message TurnResponse{
+    bool success=1;
+}
+
+message MoveRequest{
+    bool forward=1;
+    int32 distance=2;
+}
+
+message MoveResponse{
+    bool success=1;
+}
