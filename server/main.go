@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/brentnd/go-snowboy"
 	"github.com/takabayap/sasisuseso-tai/server/components"
 	"gocv.io/x/gocv"
 	"google.golang.org/grpc"
@@ -45,6 +46,23 @@ func main() {
 			}
 		}
 	}()
+
+	mic := &Sound{}
+	err = mic.Init()
+	if err != nil {
+		panic(err)
+	}
+	defer mic.Close()
+
+	snowboyDetector := snowboy.NewDetector("common.res")
+	defer snowboyDetector.Close()
+
+	snowboyDetector.HandleFunc(snowboy.NewHotword("snowboy.umdl", 0.5), func(string) {
+		fmt.Println("detected!")
+	})
+	sr, nc, bd := snowboyDetector.AudioFormat()
+	fmt.Printf("sample rate=%d, num channels=%d, bit depth=%d\n", sr, nc, bd)
+	go snowboyDetector.ReadAndDetect(mic)
 
 	conn, err := grpc.Dial("localhost:9000", grpc.WithInsecure())
 	if err != nil {
