@@ -1,3 +1,9 @@
+github.com/Kitt-AI/snowboy v1.3.0 h1:PjBVN84M/9tAzDBQXILAKMoJMxt/fT0nhJ1rhKtVRUc=
+github.com/Kitt-AI/snowboy v1.3.0/go.mod h1:sDzzMXFQ1wFkXkZaX/ant0xJsizGVq/9hyKb7ZB3cNI=
+github.com/brentnd/go-snowboy v0.0.0-20190301212623-e19133c572af h1:ijY5OHNQs3CdzTN2XT+zByIsR1QVyXTvOUSkQcBm6pw=
+github.com/brentnd/go-snowboy v0.0.0-20190301212623-e19133c572af/go.mod h1:XcT4k8Tn9hrM5SLVvu5hNQbAC6GojXM0MXz1Rt8CL68=
+github.com/gordonklaus/portaudio v0.0.0-20230709114228-aafa478834f5 h1:5AlozfqaVjGYGhms2OsdUyfdJME76E6rx5MdGpjzZpc=
+github.com/gordonklaus/portaudio v0.0.0-20230709114228-aafa478834f5/go.mod h1:WY8R6YKlI2ZI3UyzFk7P6yGSuS+hFwNtEzrexRyD7Es=
 github.com/hybridgroup/mjpeg v0.0.0-20140228234708-4680f319790e/go.mod h1:eagM805MRKrioHYuU7iKLUyFPVKqVV6um5DAvCkUtXs=
 github.com/pascaldekloe/goe v0.1.0/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
 gocv.io/x/gocv v0.33.0 h1:WDtaBrq92AKrhepYzEktydDzNSm3t5k7ciawZK4rns8=
