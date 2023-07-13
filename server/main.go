@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	webcam, err := gocv.OpenVideoCapture(0)
+	webcam, err := gocv.OpenVideoCapture(10)
 	if err != nil {
 		panic(err)
 	}
@@ -25,24 +25,29 @@ func main() {
 	windowImg := gocv.NewMat()
 	window := gocv.NewWindow("Detection")
 	field := components.NewField(1000, 1000, [4]int{0, 1, 2, 3}, gocv.ArucoDict4x4_50)
-	// should run this as a separate goroutine in the future
 	var webcamOK bool
+
+	quit := make(chan os.Signal, 1)
 
 	go func() {
 		for {
-			webcamOK = webcam.Read(&webcamImg)
-			window.WaitKey(1)
-			// some webcam has a problem reading the frame sometimes
-			if !webcamOK || webcamImg.Empty() {
-				continue
-			}
-			fieldImg, err := field.GetFieldImg(webcamImg)
-			if err != nil {
-				// if the field marker is not detected
-				gocv.Resize(webcamImg, &windowImg, image.Point{1920, 1080}, 0, 0, gocv.InterpolationLinear)
-				window.IMShow(windowImg)
-			} else {
-				window.IMShow(fieldImg)
+			select {
+			case <-quit:
+			default:
+				webcamOK = webcam.Read(&webcamImg)
+				window.WaitKey(1)
+				// some webcam has a problem reading the frame sometimes
+				if !webcamOK || webcamImg.Empty() {
+					continue
+				}
+				fieldImg, err := field.GetFieldImg(webcamImg)
+				if err != nil {
+					// if the field marker is not detected
+					gocv.Resize(webcamImg, &windowImg, image.Point{1920, 1080}, 0, 0, gocv.InterpolationLinear)
+					window.IMShow(windowImg)
+				} else {
+					window.IMShow(fieldImg)
+				}
 			}
 		}
 	}()
@@ -54,10 +59,10 @@ func main() {
 	}
 	defer mic.Close()
 
-	snowboyDetector := snowboy.NewDetector("common.res")
+	snowboyDetector := snowboy.NewDetector("../resources/common.res")
 	defer snowboyDetector.Close()
 
-	snowboyDetector.HandleFunc(snowboy.NewHotword("snowboy.umdl", 0.5), func(string) {
+	snowboyDetector.HandleFunc(snowboy.NewHotword("../resources/snowboy.umdl", 0.5), func(string) {
 		fmt.Println("detected!")
 	})
 	sr, nc, bd := snowboyDetector.AudioFormat()
@@ -80,7 +85,6 @@ func main() {
 	}
 	fmt.Println("res", res.Success)
 
-	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 }

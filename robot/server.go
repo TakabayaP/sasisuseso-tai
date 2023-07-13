@@ -11,11 +11,18 @@ import (
 
 type grpcServer struct {
 	pb.UnimplementedRobotServer
-	pins map[int]rpio.Pin
+	pins       map[int]rpio.Pin
+	isMockMode bool
 }
 
 func NewGRPCServer() *grpcServer {
-	rpio.Open()
+	if err := rpio.Open(); err != nil {
+		fmt.Println("error opening rpio, running server as mock")
+		return &grpcServer{
+			UnimplementedRobotServer: pb.UnimplementedRobotServer{},
+			isMockMode:               true,
+		}
+	}
 	pins := make(map[int]rpio.Pin)
 	for _, pin := range []int{4, 17, 9, 11} {
 		pins[pin] = rpio.Pin(pin)
@@ -24,11 +31,17 @@ func NewGRPCServer() *grpcServer {
 	return &grpcServer{
 		UnimplementedRobotServer: pb.UnimplementedRobotServer{},
 		pins:                     pins,
+		isMockMode:               false,
 	}
 }
 
 func (g *grpcServer) Turn(ctx context.Context, req *pb.TurnRequest) (*pb.TurnResponse, error) {
 	fmt.Println("turn", req)
+	if g.isMockMode {
+		return &pb.TurnResponse{
+			Success: true,
+		}, nil
+	}
 	g.pins[4].High()
 	g.pins[11].High()
 	time.Sleep(time.Duration(time.Second))
@@ -41,6 +54,11 @@ func (g *grpcServer) Turn(ctx context.Context, req *pb.TurnRequest) (*pb.TurnRes
 
 func (g *grpcServer) Move(ctx context.Context, req *pb.MoveRequest) (*pb.MoveResponse, error) {
 	fmt.Println("move", req)
+	if g.isMockMode {
+		return &pb.MoveResponse{
+			Success: true,
+		}, nil
+	}
 	g.pins[4].High()
 	g.pins[17].High()
 	time.Sleep(time.Duration(time.Second))
