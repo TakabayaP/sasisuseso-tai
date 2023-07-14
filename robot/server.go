@@ -69,18 +69,18 @@ func (g *grpcServer) Move(ctx context.Context, req *pb.MoveRequest) (*pb.MoveRes
 	}
 	if req.Forward {
 		g.pins[4].High()
-		g.pins[17].High()
-	} else {
 		g.pins[9].High()
+	} else {
 		g.pins[11].High()
+		g.pins[17].High()
 	}
 	time.Sleep(time.Duration(time.Millisecond * time.Duration(req.Distance)))
 	if req.Forward {
 		g.pins[4].Low()
-		g.pins[17].Low()
-	} else {
 		g.pins[9].Low()
+	} else {
 		g.pins[11].Low()
+		g.pins[17].Low()
 	}
 	g.mutex.Unlock()
 	return &pb.MoveResponse{
