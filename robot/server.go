@@ -49,7 +49,7 @@ func (g *grpcServer) Turn(ctx context.Context, req *pb.TurnRequest) (*pb.TurnRes
 	}
 	g.pins[4].High()
 	g.pins[11].High()
-	time.Sleep(time.Duration(time.Millisecond*480) * time.Duration(req.Angle))
+	time.Sleep(time.Duration(time.Millisecond) * time.Duration(req.Angle))
 	g.pins[4].Low()
 	g.pins[11].Low()
 	g.mutex.Unlock()
