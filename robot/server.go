@@ -42,14 +42,14 @@ func (g *grpcServer) Turn(ctx context.Context, req *pb.TurnRequest) (*pb.TurnRes
 	g.mutex.Lock()
 	fmt.Println("turn", req)
 	if g.isMockMode {
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 480)
 		return &pb.TurnResponse{
 			Success: true,
 		}, nil
 	}
 	g.pins[4].High()
 	g.pins[11].High()
-	time.Sleep(time.Duration(time.Second))
+	time.Sleep(time.Duration(time.Millisecond*480) * time.Duration(req.Angle))
 	g.pins[4].Low()
 	g.pins[11].Low()
 	g.mutex.Unlock()
