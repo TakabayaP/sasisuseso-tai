@@ -38,6 +38,7 @@ func NewGRPCServer() *grpcServer {
 func (g *grpcServer) Turn(ctx context.Context, req *pb.TurnRequest) (*pb.TurnResponse, error) {
 	fmt.Println("turn", req)
 	if g.isMockMode {
+		time.Sleep(time.Second)
 		return &pb.TurnResponse{
 			Success: true,
 		}, nil
@@ -55,6 +56,7 @@ func (g *grpcServer) Turn(ctx context.Context, req *pb.TurnRequest) (*pb.TurnRes
 func (g *grpcServer) Move(ctx context.Context, req *pb.MoveRequest) (*pb.MoveResponse, error) {
 	fmt.Println("move", req)
 	if g.isMockMode {
+		time.Sleep(time.Second)
 		return &pb.MoveResponse{
 			Success: true,
 		}, nil
