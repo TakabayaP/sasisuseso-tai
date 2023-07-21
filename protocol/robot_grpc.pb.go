@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type RobotClient interface {
 	Turn(ctx context.Context, in *TurnRequest, opts ...grpc.CallOption) (*TurnResponse, error)
 	Move(ctx context.Context, in *MoveRequest, opts ...grpc.CallOption) (*MoveResponse, error)
+	SetPin(ctx context.Context, in *SetPinRequest, opts ...grpc.CallOption) (*SetPinResponse, error)
 }
 
 type robotClient struct {
@@ -52,12 +53,22 @@ func (c *robotClient) Move(ctx context.Context, in *MoveRequest, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *robotClient) SetPin(ctx context.Context, in *SetPinRequest, opts ...grpc.CallOption) (*SetPinResponse, error) {
+	out := new(SetPinResponse)
+	err := c.cc.Invoke(ctx, "/robot.Robot/SetPin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RobotServer is the server API for Robot service.
 // All implementations must embed UnimplementedRobotServer
 // for forward compatibility
 type RobotServer interface {
 	Turn(context.Context, *TurnRequest) (*TurnResponse, error)
 	Move(context.Context, *MoveRequest) (*MoveResponse, error)
+	SetPin(context.Context, *SetPinRequest) (*SetPinResponse, error)
 	mustEmbedUnimplementedRobotServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedRobotServer) Turn(context.Context, *TurnRequest) (*TurnRespon
 }
 func (UnimplementedRobotServer) Move(context.Context, *MoveRequest) (*MoveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Move not implemented")
+}
+func (UnimplementedRobotServer) SetPin(context.Context, *SetPinRequest) (*SetPinResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetPin not implemented")
 }
 func (UnimplementedRobotServer) mustEmbedUnimplementedRobotServer() {}
 
@@ -120,6 +134,24 @@ func _Robot_Move_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Robot_SetPin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetPinRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RobotServer).SetPin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/robot.Robot/SetPin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RobotServer).SetPin(ctx, req.(*SetPinRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Robot_ServiceDesc is the grpc.ServiceDesc for Robot service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var Robot_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Move",
 			Handler:    _Robot_Move_Handler,
+		},
+		{
+			MethodName: "SetPin",
+			Handler:    _Robot_SetPin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
